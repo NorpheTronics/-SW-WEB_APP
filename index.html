@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bluetooth Web Interface</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #device-info {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bluetooth Web Interface</h1>
+  <button id="scan-button">Scan for Bluetooth Devices</button>
+
+  <div id="device-info">
+    <h2>Device Info</h2>
+    <p><strong>Device Name:</strong> <span id="device-name">N/A</span></p>
+    <p><strong>Device ID:</strong> <span id="device-id">N/A</span></p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
