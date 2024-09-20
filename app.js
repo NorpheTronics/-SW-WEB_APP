@@ -1,75 +1,47 @@
-document.getElementById('scan-button').addEventListener('click', async () => {
-  try {
-    // Request Bluetooth devices
-    const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true, // Scans for all devices
-      optionalServices: ['battery_service'] // Adjust services as needed
-    });
+// Select the HTML elements we will interact with
+const scanButton = document.getElementById('scan-button');
+const progressBar = document.getElementById('progress-bar');
+const devicesList = document.getElementById('devices-list');
+const uploadFirmwareButton = document.getElementById('upload-firmware-button');
+const textPercentage = document.getElementById('text-percentage');
 
-    // Display the device in the list
-    displayDevice(device);
-  } catch (error) {
-    console.error('Error during Bluetooth scan:', error);
-  }
+// Event listener for scanning devices
+scanButton.addEventListener('click', () => {
+  // Show the progress bar to simulate scanning
+  progressBar.style.display = 'inline-block';
+  devicesList.innerHTML = '<li>Scanning for devices...</li>';
+
+  // Simulate a device scan by adding devices after a short delay
+  setTimeout(() => {
+    // Hide progress bar after scanning
+    progressBar.style.display = 'none';
+    
+    // Populate the devices list with some simulated devices
+    devicesList.innerHTML = `
+      <li class="device-item">Device 1</li>
+      <li class="device-item">Device 2</li>
+      <li class="device-item">Device 3</li>
+    `;
+
+    // Show the upload firmware button
+    uploadFirmwareButton.style.display = 'block';
+
+  }, 2000); // Simulate a 2-second scan delay
 });
 
-// Function to add the discovered device to the list
-function displayDevice(device) {
-  const deviceList = document.getElementById('device-list');
-  
-  // Remove placeholder message
-  deviceList.innerHTML = '';
+// Event listener for uploading firmware
+uploadFirmwareButton.addEventListener('click', () => {
+  // Show the percentage progress and simulate upload
+  textPercentage.style.display = 'block';
+  let percentage = 0;
 
-  const deviceItem = document.createElement('div');
-  deviceItem.className = 'device-item';
-
-  // Create content for the device item
-  const deviceName = document.createElement('p');
-  deviceName.textContent = `Device Name: ${device.name || 'Unknown'}`;
-  
-  const deviceId = document.createElement('p');
-  deviceId.textContent = `Device ID: ${device.id}`;
-
-  // Create connect button for each device
-  const connectButton = document.createElement('button');
-  connectButton.className = 'connect-button';
-  connectButton.textContent = 'Connect';
-  connectButton.addEventListener('click', () => connectToDevice(device));
-
-  // Append details and button to the device item
-  deviceItem.appendChild(deviceName);
-  deviceItem.appendChild(deviceId);
-  deviceItem.appendChild(connectButton);
-
-  // Append the device item to the device list
-  deviceList.appendChild(deviceItem);
-}
-
-// Function to connect to the device when the "Connect" button is clicked
-async function connectToDevice(device) {
-  try {
-    const server = await device.gatt.connect();
-
-    // Display connected device info
-    document.getElementById('device-info').style.display = 'block';
-    document.getElementById('device-name').textContent = device.name || 'Unknown';
-    document.getElementById('device-id').textContent = device.id;
-
-    console.log(`Connected to ${device.name} (${device.id})`);
-
-    // Example: Reading battery level if available
-    try {
-      const batteryService = await server.getPrimaryService('battery_service');
-      const batteryLevelCharacteristic = await batteryService.getCharacteristic('battery_level');
-      const batteryLevel = await batteryLevelCharacteristic.readValue();
-      const batteryPercent = batteryLevel.getUint8(0);
-
-      console.log('Battery Level is ' + batteryPercent + '%');
-    } catch (error) {
-      console.log('Battery service not found on this device.');
+  // Simulate firmware upload progress
+  const interval = setInterval(() => {
+    if (percentage >= 100) {
+      clearInterval(interval);
+    } else {
+      percentage += 10;
+      textPercentage.textContent = `${percentage}%`;
     }
-
-  } catch (error) {
-    console.error('Failed to connect:', error);
-  }
-}
+  }, 500); // Increase percentage every 0.5 seconds
+});

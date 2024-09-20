@@ -5,61 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bluetooth Web Interface</title>
   <style>
+    /* Styling for the entire layout */
     body {
+      background-color: black;
+      color: white;
       font-family: Arial, sans-serif;
-      margin: 20px;
+      padding: 16px;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    #device-info, #device-list {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-    }
-    #device-info {
-      display: none;
-    }
-    .device-item {
-      margin-bottom: 10px;
-      padding: 10px;
-      border: 1px solid #aaa;
-      background-color: #f9f9f9;
-    }
-    .connect-button {
+
+    /* Style for the scan button */
+    #scan-button {
       background-color: #28a745;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 12px 24px;
+      font-size: 16px;
       cursor: pointer;
+      margin-top: 16px;
     }
-    .connect-button:hover {
-      background-color: #218838;
+
+    /* Style for the progress bar */
+    #progress-bar {
+      width: 40px;
+      height: 40px;
+      margin-left: 16px;
+      display: none; /* Hidden initially */
+    }
+
+    /* Style for the devices list (like RecyclerView) */
+    #devices-list {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 16px;
+      padding: 16px;
+      background-color: #222;
+      border-radius: 8px;
+      list-style: none;
+    }
+
+    /* Style for individual device items */
+    .device-item {
+      background-color: #333;
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 4px;
+    }
+
+    /* Style for the upload firmware button */
+    #upload-firmware-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 16px;
+      display: none; /* Hidden initially */
+    }
+
+    /* Style for the percentage text */
+    #text-percentage {
+      margin-top: 16px;
+      display: none; /* Hidden initially */
     }
   </style>
 </head>
 <body>
 
-  <h1>Bluetooth Web Interface</h1>
+  <!-- Button to start scan, centered horizontally -->
+  <button id="scan-button">Scan</button>
 
-  <!-- Button to scan for Bluetooth devices -->
-  <button id="scan-button">Scan for Bluetooth Devices</button>
+  <!-- Circular Progress Bar, positioned to the right of the Scan Button -->
+  <img id="progress-bar" src="https://www.w3schools.com/howto/img_spinner.gif" alt="Loading">
 
-  <!-- Section to list available devices -->
-  <div id="device-list">
-    <h2>Available Devices</h2>
-    <p>No devices found yet.</p>
-  </div>
+  <!-- List to display Bluetooth devices, similar to RecyclerView -->
+  <ul id="devices-list">
+    <li>No devices found yet.</li>
+  </ul>
 
-  <!-- Section to display connected device information -->
-  <div id="device-info">
-    <h2>Connected Device Info</h2>
-    <p><strong>Device Name:</strong> <span id="device-name">N/A</span></p>
-    <p><strong>Device ID:</strong> <span id="device-id">N/A</span></p>
-  </div>
+  <!-- Button to upload firmware, positioned below the device list -->
+  <button id="upload-firmware-button">Upload Firmware</button>
+
+  <!-- Text to display firmware upload percentage -->
+  <p id="text-percentage">0%</p>
 
   <!-- Link to the external JavaScript file -->
   <script src="app.js"></script>
