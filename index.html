@@ -10,14 +10,18 @@
       margin: 20px;
     }
     button {
-      padding: 10px;
+      padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
+      margin-top: 20px;
     }
     #device-info, #device-list {
       margin-top: 20px;
       padding: 10px;
       border: 1px solid #ccc;
+    }
+    #device-info {
+      display: none;
     }
     .device-item {
       margin-bottom: 10px;
@@ -40,7 +44,25 @@
 <body>
 
   <h1>Bluetooth Web Interface</h1>
+
+  <!-- Button to scan for Bluetooth devices -->
   <button id="scan-button">Scan for Bluetooth Devices</button>
 
+  <!-- Section to list available devices -->
   <div id="device-list">
-    <h2>Available Devices</h2
+    <h2>Available Devices</h2>
+    <p>No devices found yet.</p>
+  </div>
+
+  <!-- Section to display connected device information -->
+  <div id="device-info">
+    <h2>Connected Device Info</h2>
+    <p><strong>Device Name:</strong> <span id="device-name">N/A</span></p>
+    <p><strong>Device ID:</strong> <span id="device-id">N/A</span></p>
+  </div>
+
+  <!-- Link to the external JavaScript file -->
+  <script src="app.js"></script>
+
+</body>
+</html>
