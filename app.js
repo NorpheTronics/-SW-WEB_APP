@@ -2,20 +2,24 @@ document.getElementById('scan-button').addEventListener('click', async () => {
   try {
     // Request Bluetooth devices
     const device = await navigator.bluetooth.requestDevice({
-      acceptAllDevices: true, // Scan for all devices
-      optionalServices: ['battery_service'] // Add services to connect to later
+      acceptAllDevices: true, // Scans for all devices
+      optionalServices: ['battery_service'] // Adjust services as needed
     });
 
     // Display the device in the list
     displayDevice(device);
   } catch (error) {
-    console.error('Error during Bluetooth scan or connection:', error);
+    console.error('Error during Bluetooth scan:', error);
   }
 });
 
 // Function to add the discovered device to the list
 function displayDevice(device) {
   const deviceList = document.getElementById('device-list');
+  
+  // Remove placeholder message
+  deviceList.innerHTML = '';
+
   const deviceItem = document.createElement('div');
   deviceItem.className = 'device-item';
 
