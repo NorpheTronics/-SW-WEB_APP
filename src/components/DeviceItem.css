@@ -1,0 +1,105 @@
+/* src/components/DeviceItem.css */
+
+.device-item {
+    position: relative;
+    width: 100%;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+    height: calc(100vh / 3);
+    overflow-y: auto;
+  }
+  
+  .background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Pour que l'image couvre tout le conteneur */
+    opacity: 0.3;
+  }
+  
+  .content {
+    position: relative;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ajoutez cette ligne pour que le contenu prenne toute la hauteur */
+    box-sizing: border-box; /* Inclut le padding dans la hauteur totale */
+  }
+  
+  .device-info {
+    margin-bottom: 16px;
+  }
+  
+  .device-name {
+    font-size: 16px;
+    color: white;
+    margin: 0 0 4px 0;
+  }
+  
+  .device-address {
+    font-size: 14px;
+    color: white;
+    margin: 0;
+  }
+  
+  /* Icône de batterie et niveau */
+  .battery-info {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .battery-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .battery-level {
+    margin-left: 4px;
+    font-size: 14px;
+    color: white;
+  }
+  
+  /* Badge de statut */
+  .status-badge {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+  }
+  
+  .status-badge.disponible {
+    background-color: orange;
+  }
+  
+  .status-badge.a_jour {
+    background-color: green;
+  }
+  
+  .status-badge.en_cours {
+    background-color: blue;
+  }
+  
+  .status-badge.en_attente {
+    background-color: gray;
+  }
+  
+  /* Image pour l'animation */
+  .ping-image {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+  

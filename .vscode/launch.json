@@ -1,0 +1,19 @@
+// .vscode/launch.json
+
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Lancer l'application React",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:3000",
+        "webRoot": "${workspaceFolder}/src",
+        "preLaunchTask": "npm: start",
+        "sourceMaps": true,
+        "userDataDir": "${workspaceFolder}/.vscode/chrome",
+        "internalConsoleOptions": "openOnSessionStart"
+      }
+    ]
+  }
+  
