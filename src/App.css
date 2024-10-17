@@ -29,6 +29,21 @@ body {
   height: auto;
 }
 
+/* Styles pour le bouton "Scanner" */
+.button-scan-bluetooth {
+  background-color: #03a9f4;
+  color: white;
+  padding: 12px;
+  margin-left: 16px; /* Espace entre le logo et le bouton */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button-scan-bluetooth:hover {
+  background-color: #0288d1;
+}
+
 .spacer {
   flex: 1;
 }
