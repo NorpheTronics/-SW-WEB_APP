@@ -44,6 +44,7 @@ function App() {
 
   const [bluetoothSupported, setBluetoothSupported] = useState(true);
   const [scanStarted, setScanStarted] = useState(false);
+  const [scannedDevices, setScannedDevices] = useState([]); // Devices discovered during the scan
 
   useEffect(() => {
     if (!navigator.bluetooth) {
@@ -53,53 +54,98 @@ function App() {
       console.log('API Web Bluetooth supportée.');
       // Ne lancez pas le scan ici
     }
+
+    // Clear paired devices every time the app reloads or starts
+    setScannedDevices([]);
+
   }, []);
 
-  const startBluetoothScan = async () => {
-    if (scanStarted) return; // Empêche les scans multiples
-    setScanStarted(true);
-    console.log('Démarrage du scan Bluetooth...');
+const startBluetoothScan = async () => {
+  if (scanStarted) return; // Prevent multiple scans
+  setScanStarted(true);
+  console.log('Starting Bluetooth scan...');
 
-    try {
-      const device = await navigator.bluetooth.requestDevice({
-        filters: [{ namePrefix: 'NORPHE' }],
-      });
+  try {
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [{ namePrefix: 'NORPHE' }],
+      optionalServices: ['battery_service', 'device_information'],
+    });
 
-      device.addEventListener('gattserverdisconnected', onDisconnected);
+    device.addEventListener('gattserverdisconnected', onDisconnected);
 
-      // Vous pouvez vous connecter au serveur GATT si nécessaire
-      // const server = await device.gatt.connect();
-      // console.log(`Connecté à l'appareil : ${device.name}`);
+    console.log(`Device detected: ${device.name}`);
 
-      console.log(`Appareil détecté : ${device.name}`);
+    const server = await device.gatt.connect();
+    console.log(`Connected to GATT server of device: ${device.name}`);
 
-      setDevices((prevDevices) => {
-        // Vérifier si l'appareil est déjà dans la liste pour éviter les doublons
-        const deviceExists = prevDevices.some((d) => d.address === device.id);
-        if (deviceExists) {
-          console.log('Appareil déjà présent dans la liste.');
-          return prevDevices;
-        }
+    const batteryLevel = await readBatteryLevel(server);
+    console.log(`Battery level of ${device.name}: ${batteryLevel}%`);
 
-        return [
-          ...prevDevices,
-          {
-            id: `bt-${device.id}`, // Préfixe pour éviter les conflits d'ID
-            name: device.name || 'Appareil inconnu',
-            address: device.id,
-            batteryLevel: 100, // Valeur par défaut
-            batteryIcon: batteryIcon,
-            backgroundImage: backgroundImage,
-            statusBadge: 'a_jour',
-            pingImage: pingImage,
-          },
-        ];
-      });
-    } catch (error) {
-      console.error('Erreur lors du scan Bluetooth :', error);
-      setScanStarted(false);
-    }
-  };
+    const firmwareVersion = await readFirmwareVersion(server);
+    console.log(`Firmware version of ${device.name}: ${firmwareVersion}`);
+
+    const statusBadge = getStatusBadge(firmwareVersion);
+
+    setDevices((prevDevices) => {
+      const deviceExists = prevDevices.some((d) => d.address === device.id);
+      if (deviceExists) {
+        console.log('Device already present in the list.');
+        return prevDevices;
+      }
+
+      return [
+        ...prevDevices,
+        {
+          id: `bt-${device.id}`,
+          name: device.name || 'Unknown Device',
+          address: device.id,
+          batteryLevel: batteryLevel || 'N/A',
+          firmwareVersion: firmwareVersion || 'Unknown',
+          statusBadge: statusBadge, // Pass the status badge based on firmware
+          batteryIcon: batteryIcon,
+          backgroundImage: backgroundImage,
+          pingImage: pingImage,
+        },
+      ];
+    });
+  } catch (error) {
+    console.error('Error during Bluetooth scan:', error);
+  } finally {
+    setScanStarted(false);
+  }
+};
+
+const readBatteryLevel = async (server) => {
+  try {
+    const service = await server.getPrimaryService('battery_service');
+    const characteristic = await service.getCharacteristic('battery_level');
+    const value = await characteristic.readValue();
+    return value.getUint8(0);
+  } catch (error) {
+    console.error('Error reading battery level:', error);
+    return null;
+  }
+};
+
+const readFirmwareVersion = async (server) => {
+  try {
+    const service = await server.getPrimaryService('device_information');
+    const characteristic = await service.getCharacteristic('firmware_revision_string');
+    const value = await characteristic.readValue();
+    const decoder = new TextDecoder('utf-8');
+    return decoder.decode(value);
+  } catch (error) {
+    console.error('Error reading firmware version:', error);
+    return null;
+  }
+};
+
+const getStatusBadge = (firmwareVersion) => {
+  const latestFirmware = '1.2.0'; // Example latest firmware version
+  console.log(`Firmware version : ${firmwareVersion}`);
+  if (!firmwareVersion) return 'unknown';
+  return firmwareVersion === latestFirmware ? 'a_jour' : 'disponible';
+};
 
   const onDisconnected = (event) => {
     const device = event.target;
@@ -118,6 +164,7 @@ function App() {
   };
 
   return (
+    
     <div className="main">
       {/* En-tête */}
       <div className="header-section">
